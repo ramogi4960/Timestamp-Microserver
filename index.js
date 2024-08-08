@@ -43,7 +43,20 @@ app.get("/api/", (req, res) => {
 
 // your first API endpoint... 
 app.get("/api/:data", function (req, res) {
-    let theDate;
+    let theDate = /[\s-/]/.test(req.params.data) ? new Date(req.params.data) : new Date(Number(req.params.data));
+    console.log(theDate);
+    if (theDate.toString() === "Invalid Date") {
+        res.json({
+            error: "Invalid Date"
+        });
+    }
+    else {
+        res.json({
+            "unix": theDate.getTime(),
+            "utc": `${days[theDate.getDay()]}, ${theDate.getDate().toString().padStart(2, "0")} ${months[theDate.getMonth()]} ${theDate.getFullYear()}` +
+            ` ${theDate.getHours().toString().padStart(2, "0")}:${theDate.getMinutes().toString().padStart(2, "0")}:${theDate.getSeconds().toString().padStart(2, "0")} GMT`
+        });
+    }
 });
 
 
